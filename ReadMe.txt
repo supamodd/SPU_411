@@ -1,4 +1,5 @@
-﻿
+﻿https://github.com/okovtun/SPU_411.git
+https://www.youtube.com/playlist?list=PLeqyOOqxeiIP4usBDeWs6DqgAEn7Yj2aG
 
 TODO:
 0. Выучить теорию !!!!!!!
