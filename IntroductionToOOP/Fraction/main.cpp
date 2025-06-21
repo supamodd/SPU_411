@@ -53,7 +53,7 @@ public:
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
-		cout << "Constructor:\t\t" << this << endl;
+		cout << "SingleArgumentConstruction:\t\t" << this << endl;
 	}
 	Fraction(int numerator, int denominator)
 	{
@@ -111,6 +111,17 @@ public:
 		Fraction old = *this;
 		integer++;
 		return old;
+	}
+
+				//Type-cast operators:
+
+	operator int()const
+	{
+		return integer + numerator / denominator;
+	}
+	operator double()const
+	{
+		return integer + (double)numerator / denominator;
 	}
 
 	//					Methods:
@@ -271,7 +282,7 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 
 	switch (n)
 	{
-	case 1:obj = numbers[0]; break;
+	case 1:obj = Fraction(numbers[0]); break;
 	case 2:obj = Fraction(numbers[0], numbers[1]); break;
 	case 3:obj = Fraction(numbers[0], numbers[1], numbers[2]); break;
 	}
@@ -284,7 +295,9 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 //#define ARITHMETICAL_OPERATORS
 //#define INCREMENT_DECREMENT
 //#define COMPARISON_OPERATORS
-#define ISTREAM_OPERATOR
+//#define ISTREAM_OPERATOR
+//#define CONVERION_1
+//#define CONVERSION_FROM_OTHER_TO_CLASS
 
 void main()
 {
@@ -361,5 +374,41 @@ void main()
 	cout << delimiter << endl;
 #endif // ISTREAM_OPERATOR
 
+	//(type)value; // C-like notation
+	// type(value); Functional notation
+	//int a = 2.; C4244 ... possible loss of data
 
+#ifdef CONVERSION_1
+
+
+	int a = 2;		// No converions
+	double b = 3;	//Implicit conversion from less to more ('int' to 'double')
+	int c = b;		//Implicit conversion from more to less without data loss
+	int d = 4.5;	//Implicit conversion from more to less without loss data
+
+#endif // CONVERSION_1
+#ifdef CONVERSION_FROM_OTHER_TO_CLASS
+	Fraction A = 5;
+	cout << A << endl;
+
+	Fraction B;
+	cout << delimiter << endl;
+	B = Fraction(8);
+	cout << delimiter << endl;
+	cout << B << endl;
+#endif // CONVERSION_FROM_OTHER_TO_CLASS
+
+	/*operator type()
+	{
+		....;
+		....;
+		....;
+	}*/
+	Fraction A(2, 3, 4);
+	cout << A << endl;
+
+	int a = A;
+	cout << a << endl;
+	double b = (double)A;
+	cout << b << endl;
 }
