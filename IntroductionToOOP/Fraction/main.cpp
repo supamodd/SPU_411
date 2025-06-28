@@ -12,7 +12,7 @@ class Fraction
 {
 	int integer;		//Целая часть
 	int numerator;		//Числитель
-	int denominator;	//Значенатель
+	int denominator;	//Знаменатель
 public:
 	int get_integer()const
 	{
@@ -48,12 +48,22 @@ public:
 		this->denominator = 1;
 		cout << "DefaultConstructor:\t" << this << endl;
 	}
-	Fraction(int integer)
+	explicit Fraction(int integer)
 	{
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
 		cout << "SingleArgumentConstruction:\t\t" << this << endl;
+	}
+	Fraction(double decimal)
+	{
+		//decimal - десятичный
+		decimal += 1e-10;
+		integer = decimal;	//неявное преобразование из дабл в инт.
+		decimal -= integer;
+		denominator = 1e+9;//Максимально возможное значение числителя (9 десятич разрядов)
+		numerator = decimal * denominator;
+		reduce();
 	}
 	Fraction(int numerator, int denominator)
 	{
@@ -125,6 +135,30 @@ public:
 	}
 
 	//					Methods:
+	Fraction& reduce()
+	{
+		int more, less, rest;
+		if (numerator < denominator)
+		{
+			less = numerator;
+			more = denominator;
+		}
+		else
+		{
+			more = numerator;
+			less = denominator;
+		}
+		do
+		{
+			rest = more % less;
+			more = less;
+			less = rest;
+		} while (rest);
+		int GCD = more; //GCD - Greatest COmmon Divisor
+		numerator /= GCD;
+		denominator /= GCD;
+		return *this;
+	}
 	Fraction& to_improper()
 	{
 		//Переводит дробь в неправильную (Целую часть интегрирует в числитель)
@@ -298,6 +332,7 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 //#define ISTREAM_OPERATOR
 //#define CONVERION_1
 //#define CONVERSION_FROM_OTHER_TO_CLASS
+#define CONVERSION_FROM_CLASS_TO_OTHER
 
 void main()
 {
@@ -397,6 +432,8 @@ void main()
 	cout << delimiter << endl;
 	cout << B << endl;
 #endif // CONVERSION_FROM_OTHER_TO_CLASS
+#ifdef CONVERSION_FROM_CLASS_OTHER
+
 
 	/*operator type()
 	{
@@ -411,4 +448,8 @@ void main()
 	cout << a << endl;
 	double b = (double)A;
 	cout << b << endl;
+#endif // CONVERSION_FROM_CLASS_OTHER
+
+	Fraction A = 2.76;
+	cout << A << endl;
 }
