@@ -1,6 +1,9 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
 
 #define delimiter "\n-------------------------------------\n"
 
@@ -12,7 +15,7 @@ class Fraction
 {
 	int integer;		//Целая часть
 	int numerator;		//Числитель
-	int denominator;	//Знаменатель
+	int denominator;	//Значенатель
 public:
 	int get_integer()const
 	{
@@ -53,15 +56,16 @@ public:
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
-		cout << "SingleArgumentConstruction:\t\t" << this << endl;
+		cout << "SingleArgConstructor:\t" << this << endl;
 	}
 	Fraction(double decimal)
 	{
 		//decimal - десятичный
 		decimal += 1e-10;
-		integer = decimal;	//неявное преобразование из дабл в инт.
+		integer = decimal;	//неявное преобразование типов из 'double' в 'int'
 		decimal -= integer;
-		denominator = 1e+9;//Максимально возможное значение числителя (9 десятич разрядов)
+		denominator = 1e+9;	//Максимально возможное значение числителя (9 десятичных разрядов)
+		//e - Exponent (оснвание системы счисления)
 		numerator = decimal * denominator;
 		reduce();
 	}
@@ -103,7 +107,7 @@ public:
 
 	Fraction& operator*=(const Fraction& other)
 	{
-		return *this = *this*other;
+		return *this = *this * other;
 	}
 	Fraction& operator/=(const Fraction& other)
 	{
@@ -123,8 +127,7 @@ public:
 		return old;
 	}
 
-				//Type-cast operators:
-
+	//				Type-cast operators:
 	operator int()const
 	{
 		return integer + numerator / denominator;
@@ -137,6 +140,7 @@ public:
 	//					Methods:
 	Fraction& reduce()
 	{
+		//https://www.webmath.ru/poleznoe/formules_12_7.php
 		int more, less, rest;
 		if (numerator < denominator)
 		{
@@ -154,7 +158,7 @@ public:
 			more = less;
 			less = rest;
 		} while (rest);
-		int GCD = more; //GCD - Greatest COmmon Divisor
+		int GCD = more;	//GCD - Greatest Common Divisor
 		numerator /= GCD;
 		denominator /= GCD;
 		return *this;
@@ -208,8 +212,8 @@ Fraction operator*(Fraction left, Fraction right)
 	return result;*/
 	return Fraction
 	(
-		left.get_numerator()*right.get_numerator(),
-		left.get_denominator()*right.get_denominator()
+		left.get_numerator() * right.get_numerator(),
+		left.get_denominator() * right.get_denominator()
 	).to_proper();
 }
 Fraction operator/(const Fraction& left, const Fraction& right)
@@ -223,8 +227,8 @@ bool operator==(Fraction left, Fraction right)
 	left.to_improper();
 	right.to_improper();
 	return
-		left.get_numerator()*right.get_denominator() ==
-		right.get_numerator()*left.get_denominator();
+		left.get_numerator() * right.get_denominator() ==
+		right.get_numerator() * left.get_denominator();
 }
 bool operator!=(const Fraction& left, const Fraction& right)
 {
@@ -235,16 +239,16 @@ bool operator>(Fraction left, Fraction right)
 	left.to_improper();
 	right.to_improper();
 	return
-		left.get_numerator()*right.get_denominator() >
-		right.get_numerator()*left.get_denominator();
+		left.get_numerator() * right.get_denominator() >
+		right.get_numerator() * left.get_denominator();
 }
 bool operator<(Fraction left, Fraction right)
 {
 	left.to_improper();
 	right.to_improper();
 	return
-		left.get_numerator()*right.get_denominator() <
-		right.get_numerator()*left.get_denominator();
+		left.get_numerator() * right.get_denominator() <
+		right.get_numerator() * left.get_denominator();
 }
 bool operator>=(const Fraction& left, const Fraction& right)
 {
@@ -307,7 +311,7 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 		numbers[n++] = atoi(pch);	//https://legacy.cplusplus.com/reference/cstdlib/atoi/
 	/*
 	---------------------------
-	Функция atoi() ASCII to Integer, принимает строку ASCII-сиволов, и возвращает целое число, 
+	Функция atoi() ASCII to Integer, принимает строку ASCII-сиволов, и возвращает целое число,
 	соответствуюзее этой строке.
 	---------------------------
 	*/
@@ -330,9 +334,9 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 //#define INCREMENT_DECREMENT
 //#define COMPARISON_OPERATORS
 //#define ISTREAM_OPERATOR
-//#define CONVERION_1
+//#define CONVERSIONS_BASICS
 //#define CONVERSION_FROM_OTHER_TO_CLASS
-#define CONVERSION_FROM_CLASS_TO_OTHER
+//#define CONVERSIONS_FROM_CLASS_TO_OTHER
 
 void main()
 {
@@ -409,21 +413,28 @@ void main()
 	cout << delimiter << endl;
 #endif // ISTREAM_OPERATOR
 
-	//(type)value; // C-like notation
-	// type(value); Functional notation
-	//int a = 2.; C4244 ... possible loss of data
+#ifdef CONVERSIONS_BASICS
+	//(type)value;	//C-like notation
+//type(value);	//Functional notation
+//C4244: ... possible loss of data
 
-#ifdef CONVERSION_1
-
-
-	int a = 2;		// No converions
+	int a = 2;		//No conversions
 	double b = 3;	//Implicit conversion from less to more ('int' to 'double')
 	int c = b;		//Implicit conversion from more to less without data loss
-	int d = 4.5;	//Implicit conversion from more to less without loss data
+	int d = 4.5;	//Implicit conversion from more to less with data loss  
+#endif // CONVERSIONS_BASICS
 
-#endif // CONVERSION_1
+	/*
+	------------------------------
+	1. From other to Class:
+		1.1. SingleArgumentConstrictor;
+		1.2. Assignment operator (Copy assignment);
+	2. From Class to other;
+	------------------------------
+	*/
+
 #ifdef CONVERSION_FROM_OTHER_TO_CLASS
-	Fraction A = 5;
+	Fraction A = (Fraction)5;		//Conversion from less to more
 	cout << A << endl;
 
 	Fraction B;
@@ -432,24 +443,28 @@ void main()
 	cout << delimiter << endl;
 	cout << B << endl;
 #endif // CONVERSION_FROM_OTHER_TO_CLASS
-#ifdef CONVERSION_FROM_CLASS_OTHER
 
-
+#ifdef CONVERSIONS_FROM_CLASS_TO_OTHER
 	/*operator type()
-	{
-		....;
-		....;
-		....;
-	}*/
+{
+	....;
+	....;
+	....;
+}*/
+
 	Fraction A(2, 3, 4);
 	cout << A << endl;
 
 	int a = A;
 	cout << a << endl;
-	double b = (double)A;
+	double b = A;
 	cout << b << endl;
-#endif // CONVERSION_FROM_CLASS_OTHER
+#endif // CONVERSIONS_FROM_CLASS_TO_OTHER
+
+	/*int i = 0;
+	i += 1;*/
 
 	Fraction A = 2.76;
 	cout << A << endl;
+
 }
