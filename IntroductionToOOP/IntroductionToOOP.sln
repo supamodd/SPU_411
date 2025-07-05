@@ -10,6 +10,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassSting", "ClassSting\ClassSting.vcxproj", "{F63A877D-4A9A-4C70-99D1-FE4A62EA8B15}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StringCheck", "StringCheck\StringCheck.vcxproj", "{42FAE9D6-F188-477D-AF79-BCA7D02D5CCF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F63A877D-4A9A-4C70-99D1-FE4A62EA8B15} = {F63A877D-4A9A-4C70-99D1-FE4A62EA8B15}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
